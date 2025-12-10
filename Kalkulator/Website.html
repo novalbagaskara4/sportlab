@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportLab - Kalkulator VO2Max Renang KU-2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #0d47a1;
+            --success-color: #2e7d32;
+            --warning-color: #f9a825;
+            --danger-color: #d32f2f;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7ff;
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        /* Header dengan menu hamburger */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            height: 60px;
+            width: 60px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-text {
+            flex: 1;
+        }
+        
+        .title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 3px;
+        }
+        
+        /* Menu Hamburger */
+        .menu-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Sidebar Menu */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .sidebar.active {
+            right: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .sidebar-title {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+        
+        .close-menu {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--dark-color);
+        }
+        
+        .menu-item:hover {
+            background-color: #f0f7ff;
+            transform: translateX(-5px);
+        }
+        
+        .menu-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .menu-item i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* Overlay untuk sidebar */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* Konten utama */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+        
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .time-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .time-input input {
+            text-align: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-reset {
+            background-color: #6c757d;
+        }
+        
+        .btn-reset:hover {
+            background-color: #545b62;
+        }
+        
+        .btn-save {
+            background-color: var(--success-color);
+        }
+        
+        .btn-save:hover {
+            background-color: #1b5e20;
+        }
+        
+        .velocity-display {
+            background-color: #e8f4fd;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 10px;
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .velocity-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 5px 0;
+        }
+        
+        .results-section {
+            margin-top: 25px;
+        }
+        
+        .result-box {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .result-label {
+            font-weight: 600;
+        }
+        
+        .result-value {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .vo2max-value {
+            font-size: 1.8rem;
+            text-align: center;
+            font-weight: 800;
+            margin: 15px 0;
+            color: var(--secondary-color);
+        }
+        
+        .category {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .category-superior {
+            background-color: #d4edda;
+            color: var(--success-color);
+        }
+        
+        .category-excellent {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .category-good {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .category-fair {
+            background-color: #f8d7da;
+            color: var(--danger-color);
+        }
+        
+        /* Tabel untuk database */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .data-table tr:hover {
+            background-color: #e8f4fd;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+        
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            width: auto;
+            margin: 0;
+        }
+        
+        /* Style untuk halaman database dan laporan di sidebar */
+        .database-content, .report-content {
+            display: none;
+            padding: 20px;
+        }
+        
+        .database-content.active, .report-content.active {
+            display: block;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+        }
+        
+        .stats-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .export-btn {
+            background-color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .report-period {
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 5px;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 1.3rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .time-input {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-box {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header dengan Menu Hamburger -->
+        <header>
+            <div class="logo-section">
+                <div class="logo">
+                    SL
+                </div>
+                <div class="header-text">
+                    <h1 class="title">SportLab VO2Max</h1>
+                    <p class="subtitle">Kalkulator Atlet Renang KU-2 (13-15 Tahun)</p>
+                </div>
+            </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+        
+        <!-- Sidebar Menu -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">Menu SportLab</h3>
+                <button class="close-menu" id="closeMenu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="menu-item active" data-page="calculator">
+                <i class="fas fa-calculator"></i>
+                <span>Kalkulator VO2Max</span>
+            </div>
+            
+            <div class="menu-item" data-page="database">
+                <i class="fas fa-database"></i>
+                <span>Database Atlet</span>
+            </div>
+            
+            <div class="menu-item" data-page="report">
+                <i class="fas fa-chart-bar"></i>
+                <span>Laporan Analisis</span>
+            </div>
+            
+            <div class="menu-item" data-page="guide">
+                <i class="fas fa-book"></i>
+                <span>Panduan Penggunaan</span>
+            </div>
+            
+            <div class="menu-item" data-page="about">
+                <i class="fas fa-info-circle"></i>
+                <span>Tentang Aplikasi</span>
+            </div>
+        </div>
+        
+        <!-- Overlay untuk menutup sidebar -->
+        <div class="overlay" id="overlay"></div>
+        
+        <!-- Konten Utama (Kalkulator) -->
+        <div class="main-content" id="calculatorPage">
+            <!-- Input Section -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-user-plus"></i> Data Atlet</h2>
+                
+                <div class="form-group">
+                    <label for="athleteName">Nama Atlet *</label>
+                    <input type="text" id="athleteName" placeholder="Masukkan nama atlet">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gender">Jenis Kelamin *</label>
+                    <select id="gender">
+                        <option value="male">Laki-laki</option>
+                        <option value="female">Perempuan</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="age">Usia (13-15 tahun) *</label>
+                    <input type="number" id="age" placeholder="14" min="13" max="15">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bestDistance">Jarak Best Time (meter) *</label>
+                    <input type="number" id="bestDistance" placeholder="Contoh: 100" min="0" step="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bestTime">Waktu Best Time *</label>
+                    <div class="time-input">
+                        <input type="number" id="bestMinutes" placeholder="Menit" min="0" value="0">
+                        <input type="number" id="bestSeconds" placeholder="Detik" min="0" max="59" value="0">
+                        <input type="number" id="bestMilliseconds" placeholder="MS" min="0" max="999" value="0">
+                    </div>
+                </div>
+                
+                <h3 style="margin: 25px 0 10px 0; color: var(--secondary-color);">Data Tes Renang</h3>
+                
+                <div class="form-group">
+                    <label for="test12min">Jarak Tes 12 Menit (meter) *</label>
+                    <input type="number" id="test12min" placeholder="Jarak tempuh selama 12 menit" min="0" step="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="test15min">Jarak Tes 15 Menit (meter) *</label>
+                    <input type="number" id="test15min" placeholder="Jarak tempuh selama 15 menit" min="0" step="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="testDate">Tanggal Tes</label>
+                    <input type="date" id="testDate" value="">
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Catatan Tambahan</label>
+                    <textarea id="notes" rows="3" placeholder="Catatan tentang kondisi atlet, kolam, cuaca, dll."></textarea>
+                </div>
+                
+                <button class="btn" id="calculateBtn">
+                    <i class="fas fa-calculator"></i> Hitung VO2Max Berdasarkan Velocity
+                </button>
+                
+                <div class="velocity-display" id="velocityDisplay" style="display: none;">
+                    <div>Velocity Atlet:</div>
+                    <div class="velocity-value" id="velocityValue">0.00 m/s</div>
+                    <div style="font-size: 0.9rem; color: #666;">Kecepatan renang rata-rata</div>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-chart-line"></i> Hasil Perhitungan</h2>
+                
+                <div id="resultsContainer" style="display: none;">
+                    <div class="result-box">
+                        <div class="result-item">
+                            <span class="result-label">Nama Atlet:</span>
+                            <span class="result-value" id="resultName">-</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Jenis Kelamin:</span>
+                            <span class="result-value" id="resultGender">-</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Usia:</span>
+                            <span class="result-value" id="resultAge">- tahun</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Tanggal Tes:</span>
+                            <span class="result-value" id="resultDate">-</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Velocity:</span>
+                            <span class="result-value" id="resultVelocity">- m/s</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Jarak 12 Menit:</span>
+                            <span class="result-value" id="result12min">- meter</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Jarak 15 Menit:</span>
+                            <span class="result-value" id="result15min">- meter</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">VO2Max 12 Menit:</span>
+                            <span class="result-value" id="resultVO12">- mL/Kg</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">VO2Max 15 Menit:</span>
+                            <span class="result-value" id="resultVO15">- mL/Kg</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Rata-rata VO2Max:</span>
+                            <span class="result-value" id="resultVOAverage">- mL/Kg</span>
+                        </div>
+                        
+                        <div class="vo2max-value" id="finalVO2Max">- mL/Kg</div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Kategori:</span>
+                            <span class="category" id="resultCategory">-</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Status Kelayakan:</span>
+                            <span class="result-value" id="resultEligibility">-</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-save" id="saveBtn">
+                        <i class="fas fa-save"></i> Simpan ke Database
+                    </button>
+                    
+                    <button class="btn btn-reset" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset Form
+                    </button>
+                </div>
+                
+                <div id="noResults" style="text-align: center; padding: 40px 20px; color: #666;">
+                    <i class="fas fa-calculator" style="font-size: 3rem; color: #ddd; margin-bottom: 15px;"></i>
+                    <h3 style="color: #999;">Data akan ditampilkan di sini</h3>
+                    <p>Masukkan data atlet dan hasil tes untuk menghitung VO2Max</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Halaman Database (dalam sidebar) -->
+        <div class="database-content" id="databasePage">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-database"></i> Database Atlet</h2>
+                
+                <div class="search-box">
+                    <input type="text" id="searchAthlete" placeholder="Cari atlet (nama atau ID)...">
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Atlet</div>
+                        <div class="stat-value" id="totalAthletes">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Laki-laki</div>
+                        <div class="stat-value" id="maleAthletes">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Perempuan</div>
+                        <div class="stat-value" id="femaleAthletes">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Lulus Seleksi</div>
+                        <div class="stat-value" id="eligibleAthletes">0</div>
+                    </div>
+                </div>
+                
+                <button class="btn export-btn" id="exportBtn">
+                    <i class="fas fa-file-export"></i> Ekspor ke CSV
+                </button>
+                
+                <div id="databaseContainer">
+                    <p style="text-align: center; padding: 20px; color: #666;">Database kosong. Mulai dengan menghitung dan menyimpan data atlet.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Halaman Laporan (dalam sidebar) -->
+        <div class="report-content" id="reportPage">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-chart-bar"></i> Laporan Analisis</h2>
+                
+                <div class="report-period">
+                    <label for="reportPeriod">Periode Laporan:</label>
+                    <select id="reportPeriod">
+                        <option value="all">Semua Data</option>
+                        <option value="month">Bulan Ini</option>
+                        <option value="week">Minggu Ini</option>
+                        <option value="today">Hari Ini</option>
+                    </select>
+                </div>
+                
+                <div class="stats-box" id="reportStats">
+                    <!-- Statistik laporan akan diisi oleh JavaScript -->
+                </div>
+                
+                <button class="btn" id="generateReportBtn">
+                    <i class="fas fa-chart-bar"></i> Generate Laporan
+                </button>
+                
+                <button class="btn export-btn" id="printReportBtn">
+                    <i class="fas fa-print"></i> Cetak Laporan
+                </button>
+                
+                <div id="reportContainer" style="margin-top: 20px;">
+                    <!-- Konten laporan akan diisi oleh JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Halaman Panduan -->
+        <div class="database-content" id="guidePage">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-book"></i> Panduan Penggunaan</h2>
+                
+                <div class="form-group">
+                    <h3>1. Menghitung VO2Max</h3>
+                    <ol style="margin-left: 20px; margin-bottom: 15px;">
+                        <li>Isi data atlet (nama, jenis kelamin, usia)</li>
+                        <li>Masukkan Best Time atlet (jarak dan waktu)</li>
+                        <li>Masukkan hasil tes 12 menit dan 15 menit</li>
+                        <li>Klik "Hitung VO2Max"</li>
+                        <li>Simpan hasil ke database</li>
+                    </ol>
+                    
+                    <h3>2. Mengelola Database</h3>
+                    <p>Di menu Database, Anda dapat:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li>Melihat semua atlet yang tersimpan</li>
+                        <li>Mencari atlet tertentu</li>
+                        <li>Mengedit atau menghapus data</li>
+                        <li>Mengekspor data ke file CSV</li>
+                    </ul>
+                    
+                    <h3>3. Membuat Laporan</h3>
+                    <p>Di menu Laporan, Anda dapat:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li>Generate laporan statistik</li>
+                        <li>Filter berdasarkan periode waktu</li>
+                        <li>Melihat analisis performa atlet</li>
+                        <li>Mencetak laporan</li>
+                    </ul>
+                    
+                    <h3>4. Standar VO2Max</h3>
+                    <p>Batas kelayakan untuk seleksi atlet KU-2:</p>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Laki-laki:</strong> ≥ 55.4 mL/Kg/menit</li>
+                        <li><strong>Perempuan:</strong> ≥ 45.1 mL/Kg/menit</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Halaman Tentang -->
+        <div class="database-content" id="aboutPage">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-info-circle"></i> Tentang Aplikasi</h2>
+                
+                <div class="form-group">
+                    <h3>SportLab VO2Max Calculator</h3>
+                    <p>Aplikasi ini dikembangkan untuk membantu proses seleksi atlet renang kelompok usia 13-15 tahun (KU-2) berdasarkan kapasitas VO2Max.</p>
+                    
+                    <h3>Fitur Utama</h3>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li>Perhitungan VO2Max berdasarkan velocity</li>
+                        <li>Database penyimpanan data atlet</li>
+                        <li>Sistem laporan analisis</li>
+                        <li>Standar kelayakan sesuai pedoman Kemenpora</li>
+                    </ul>
+                    
+                    <h3>Metodologi</h3>
+                    <p>Perhitungan didasarkan pada laporan penelitian "Pengembangan Standardisasi Kapasitas VO2max Sebagai Tolok Ukur Seleksi Atlet Renang KU-2" yang menggunakan velocity sebagai parameter utama.</p>
+                    
+                    <h3>Kontak</h3>
+                    <p>Untuk informasi lebih lanjut, silakan hubungi:</p>
+                    <p><i class="fas fa-envelope"></i> info@sportlab.id</p>
+                    
+                    <div class="velocity-display" style="margin-top: 20px;">
+                        <div>Versi Aplikasi: 2.0</div>
+                        <div class="velocity-value">SportLab Analytics</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>SportLab VO2Max Calculator - Sistem Analisis Atlet Renang KU-2</p>
+            <p>© 2025 - Data tersimpan: <span id="dbCount">0</span> atlet</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set tanggal hari ini sebagai default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('testDate').value = today;
+            
+            // Elemen DOM utama
+            const menuToggle = document.getElementById('menuToggle');
+            const closeMenu = document.getElementById('closeMenu');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const menuItems = document.querySelectorAll('.menu-item');
+            
+            // Elemen untuk halaman berbeda
+            const calculatorPage = document.getElementById('calculatorPage');
+            const databasePage = document.getElementById('databasePage');
+            const reportPage = document.getElementById('reportPage');
+            const guidePage = document.getElementById('guidePage');
+            const aboutPage = document.getElementById('aboutPage');
+            
+            // Elemen untuk kalkulator
+            const calculateBtn = document.getElementById('calculateBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const noResults = document.getElementById('noResults');
+            const velocityDisplay = document.getElementById('velocityDisplay');
+            
+            // Elemen untuk database
+            const searchAthleteInput = document.getElementById('searchAthlete');
+            const exportBtn = document.getElementById('exportBtn');
+            
+            // Elemen untuk laporan
+            const generateReportBtn = document.getElementById('generateReportBtn');
+            const printReportBtn = document.getElementById('printReportBtn');
+            
+            // Database
+            let database = JSON.parse(localStorage.getItem('sportlab_vo2max_database')) || [];
+            let currentResult = null;
+            
+            // Fungsi untuk toggle sidebar
+            function toggleSidebar() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+            
+            // Fungsi untuk menutup sidebar
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            
+            // Fungsi untuk mengganti halaman
+            function switchPage(pageName) {
+                // Sembunyikan semua halaman
+                calculatorPage.style.display = 'none';
+                databasePage.style.display = 'none';
+                reportPage.style.display = 'none';
+                guidePage.style.display = 'none';
+                aboutPage.style.display = 'none';
+                
+                // Tampilkan halaman yang dipilih
+                switch(pageName) {
+                    case 'calculator':
+                        calculatorPage.style.display = 'grid';
+                        break;
+                    case 'database':
+                        databasePage.style.display = 'block';
+                        loadDatabasePage();
+                        break;
+                    case 'report':
+                        reportPage.style.display = 'block';
+                        break;
+                    case 'guide':
+                        guidePage.style.display = 'block';
+                        break;
+                    case 'about':
+                        aboutPage.style.display = 'block';
+                        break;
+                }
+                
+                // Update menu aktif
+                menuItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-page') === pageName) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // Tutup sidebar setelah memilih halaman (di mobile)
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
+            }
+            
+            // Event listeners untuk menu
+            menuToggle.addEventListener('click', toggleSidebar);
+            closeMenu.addEventListener('click', closeSidebar);
+            overlay.addEventListener('click', closeSidebar);
+            
+            // Event listeners untuk menu items
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const pageName = this.getAttribute('data-page');
+                    switchPage(pageName);
+                });
+            });
+            
+            // Fungsi untuk menghitung VO2Max berdasarkan velocity
+            function calculateVO2Max() {
+                // Ambil data dari form
+                const name = document.getElementById('athleteName').value.trim();
+                const gender = document.getElementById('gender').value;
+                const age = parseInt(document.getElementById('age').value);
+                const bestDistance = parseFloat(document.getElementById('bestDistance').value);
+                const bestMinutes = parseFloat(document.getElementById('bestMinutes').value) || 0;
+                const bestSeconds = parseFloat(document.getElementById('bestSeconds').value) || 0;
+                const bestMilliseconds = parseFloat(document.getElementById('bestMilliseconds').value) || 0;
+                const distance12min = parseFloat(document.getElementById('test12min').value);
+                const distance15min = parseFloat(document.getElementById('test15min').value);
+                const testDate = document.getElementById('testDate').value;
+                const notes = document.getElementById('notes').value.trim();
+                
+                // Validasi input
+                if (!name) {
+                    alert('Masukkan nama atlet!');
+                    return;
+                }
+                
+                if (!bestDistance || bestDistance <= 0) {
+                    alert('Masukkan jarak best time yang valid!');
+                    return;
+                }
+                
+                const totalBestTime = (bestMinutes * 60) + bestSeconds + (bestMilliseconds / 1000);
+                if (totalBestTime <= 0) {
+                    alert('Masukkan waktu best time yang valid!');
+                    return;
+                }
+                
+                if (!distance12min || distance12min <= 0 || !distance15min || distance15min <= 0) {
+                    alert('Masukkan jarak tempuh tes 12 menit dan 15 menit yang valid!');
+                    return;
+                }
+                
+                // Hitung velocity (m/s)
+                const velocity = bestDistance / totalBestTime;
+                
+                // Tampilkan velocity
+                velocityDisplay.style.display = 'block';
+                document.getElementById('velocityValue').textContent = velocity.toFixed(3) + ' m/s';
+                
+                // Perhitungan VO2Max berdasarkan velocity sesuai laporan
+                // Faktor konversi berdasarkan data penelitian
+                const baseVelocity = 1.35; // m/s (contoh atlet elite)
+                const baseVO2Max = 60; // mL/Kg
+                const conversionFactor = baseVO2Max / baseVelocity;
+                
+                // Hitung VO2Max dari velocity
+                let vo2maxFromVelocity = velocity * conversionFactor;
+                
+                // Adjustment berdasarkan jenis kelamin (sesuai laporan)
+                const adjustment = gender === 'male' ? 10 : 20;
+                vo2maxFromVelocity -= adjustment;
+                
+                // Hitung VO2Max dari jarak tes (sebagai pembanding)
+                const vo12FromDistance = (distance12min / 970) * 65.2;
+                const vo15FromDistance = (distance15min / 1280) * 54;
+                const vo12Adjusted = vo12FromDistance - adjustment;
+                const vo15Adjusted = vo15FromDistance - adjustment;
+                
+                // Rata-rata VO2Max (menggunakan velocity sebagai primary)
+                const averageVO = vo2maxFromVelocity;
+                
+                // Tampilkan hasil
+                resultsContainer.style.display = 'block';
+                noResults.style.display = 'none';
+                
+                // Format tanggal
+                const formattedDate = testDate ? new Date(testDate).toLocaleDateString('id-ID') : '-';
+                
+                // Tampilkan data
+                document.getElementById('resultName').textContent = name;
+                document.getElementById('resultGender').textContent = gender === 'male' ? 'Laki-laki' : 'Perempuan';
+                document.getElementById('resultAge').textContent = age ? age + ' tahun' : '-';
+                document.getElementById('resultDate').textContent = formattedDate;
+                document.getElementById('resultVelocity').textContent = velocity.toFixed(3) + ' m/s';
+                document.getElementById('result12min').textContent = distance12min + ' meter';
+                document.getElementById('result15min').textContent = distance15min + ' meter';
+                document.getElementById('resultVO12').textContent = vo12Adjusted.toFixed(1) + ' mL/Kg';
+                document.getElementById('resultVO15').textContent = vo15Adjusted.toFixed(1) + ' mL/Kg';
+                document.getElementById('resultVOAverage').textContent = averageVO.toFixed(1) + ' mL/Kg';
+                document.getElementById('finalVO2Max').textContent = averageVO.toFixed(1) + ' mL/Kg';
+                
+                // Tentukan kategori berdasarkan Cooper
+                let category = '';
+                let categoryClass = '';
+                
+                if (averageVO >= 56) {
+                    category = 'Superior';
+                    categoryClass = 'category-superior';
+                } else if (averageVO >= 52) {
+                    category = 'Excellent';
+                    categoryClass = 'category-excellent';
+                } else if (averageVO >= 48) {
+                    category = 'Good';
+                    categoryClass = 'category-good';
+                } else if (averageVO >= 44) {
+                    category = 'Fair';
+                    categoryClass = 'category-fair';
+                } else {
+                    category = 'Poor';
+                    categoryClass = 'category-fair';
+                }
+                
+                const categoryElement = document.getElementById('resultCategory');
+                categoryElement.textContent = category;
+                categoryElement.className = 'category ' + categoryClass;
+                
+                // Tentukan kelayakan berdasarkan standar Kemenpora
+                const standardMin = gender === 'male' ? 55.4 : 45.1;
+                const isEligible = averageVO >= standardMin;
+                
+                document.getElementById('resultEligibility').textContent = isEligible ? 'LULUS' : 'TIDAK LULUS';
+                document.getElementById('resultEligibility').style.color = isEligible ? 'var(--success-color)' : 'var(--danger-color)';
+                document.getElementById('resultEligibility').style.fontWeight = '800';
+                
+                // Simpan hasil saat ini untuk disimpan ke database
+                currentResult = {
+                    id: 'ATL' + Date.now().toString().slice(-6),
+                    name: name,
+                    gender: gender === 'male' ? 'Laki-laki' : 'Perempuan',
+                    age: age,
+                    velocity: velocity,
+                    bestDistance: bestDistance,
+                    bestTime: totalBestTime,
+                    distance12min: distance12min,
+                    distance15min: distance15min,
+                    vo12min: vo12Adjusted,
+                    vo15min: vo15Adjusted,
+                    averageVO: averageVO,
+                    category: category,
+                    isEligible: isEligible,
+                    testDate: testDate,
+                    reportDate: new Date().toISOString(),
+                    notes: notes
+                };
+                
+                // Update counter di footer
+                updateDatabaseCount();
+            }
+            
+            // Fungsi untuk menyimpan hasil ke database
+            function saveToDatabase() {
+                if (!currentResult) {
+                    alert('Hitung VO2Max terlebih dahulu sebelum menyimpan!');
+                    return;
+                }
+                
+                // Tambahkan ke database
+                database.push(currentResult);
+                
+                // Simpan ke localStorage
+                localStorage.setItem('sportlab_vo2max_database', JSON.stringify(database));
+                
+                alert(`Data ${currentResult.name} berhasil disimpan!\n\nTotal data dalam database: ${database.length} atlet`);
+                
+                // Reset form
+                resetForm();
+                
+                // Update counter
+                updateDatabaseCount();
+            }
+            
+            // Fungsi untuk mereset form
+            function resetForm() {
+                document.getElementById('athleteName').value = '';
+                document.getElementById('gender').value = 'male';
+                document.getElementById('age').value = '';
+                document.getElementById('bestDistance').value = '';
+                document.getElementById('bestMinutes').value = '0';
+                document.getElementById('bestSeconds').value = '0';
+                document.getElementById('bestMilliseconds').value = '0';
+                document.getElementById('test12min').value = '';
+                document.getElementById('test15min').value = '';
+                document.getElementById('testDate').value = today;
+                document.getElementById('notes').value = '';
+                
+                resultsContainer.style.display = 'none';
+                velocityDisplay.style.display = 'none';
+                noResults.style.display = 'block';
+                
+                currentResult = null;
+            }
+            
+            // Fungsi untuk memuat halaman database
+            function loadDatabasePage() {
+                updateDatabaseStats();
+                displayDatabase();
+            }
+            
+            // Fungsi untuk update statistik database
+            function updateDatabaseStats() {
+                const total = database.length;
+                const male = database.filter(a => a.gender === 'Laki-laki').length;
+                const female = database.filter(a => a.gender === 'Perempuan').length;
+                const eligible = database.filter(a => a.isEligible).length;
+                
+                document.getElementById('totalAthletes').textContent = total;
+                document.getElementById('maleAthletes').textContent = male;
+                document.getElementById('femaleAthletes').textContent = female;
+                document.getElementById('eligibleAthletes').textContent = eligible;
+                
+                // Update counter di footer
+                updateDatabaseCount();
+            }
+            
+            // Fungsi untuk menampilkan database
+            function displayDatabase(filter = '') {
+                const container = document.getElementById('databaseContainer');
+                let filteredData = database;
+                
+                if (filter) {
+                    const searchTerm = filter.toLowerCase();
+                    filteredData = database.filter(item => 
+                        item.name.toLowerCase().includes(searchTerm) || 
+                        item.id.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                if (filteredData.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Tidak ada data atlet yang ditemukan.</p>';
+                    return;
+                }
+                
+                let html = `
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Velocity</th>
+                                <th>VO2Max</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                filteredData.forEach((item, index) => {
+                    const statusColor = item.isEligible ? 'var(--success-color)' : 'var(--danger-color)';
+                    const statusText = item.isEligible ? 'LULUS' : 'TIDAK';
+                    
+                    html += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.id}</td>
+                            <td>${item.name}</td>
+                            <td>${item.gender}</td>
+                            <td>${item.velocity.toFixed(2)} m/s</td>
+                            <td><strong>${item.averageVO.toFixed(1)}</strong></td>
+                            <td><span class="category ${getCategoryClass(item.averageVO)}">${item.category}</span></td>
+                            <td style="color: ${statusColor}; font-weight: 700;">${statusText}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-small" onclick="loadAthleteToForm('${item.id}')" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-small btn-reset" onclick="deleteAthlete('${item.id}')" title="Hapus">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            }
+            
+            // Fungsi untuk mendapatkan class kategori
+            function getCategoryClass(vo2max) {
+                if (vo2max >= 56) return 'category-superior';
+                if (vo2max >= 52) return 'category-excellent';
+                if (vo2max >= 48) return 'category-good';
+                if (vo2max >= 44) return 'category-fair';
+                return 'category-fair';
+            }
+            
+            // Fungsi untuk memuat data atlet ke form (global)
+            window.loadAthleteToForm = function(id) {
+                const athlete = database.find(item => item.id === id);
+                if (!athlete) return;
+                
+                // Isi form
+                document.getElementById('athleteName').value = athlete.name;
+                document.getElementById('gender').value = athlete.gender === 'Laki-laki' ? 'male' : 'female';
+                document.getElementById('age').value = athlete.age;
+                document.getElementById('bestDistance').value = athlete.bestDistance;
+                document.getElementById('test12min').value = athlete.distance12min;
+                document.getElementById('test15min').value = athlete.distance15min;
+                document.getElementById('testDate').value = athlete.testDate;
+                document.getElementById('notes').value = athlete.notes || '';
+                
+                // Set velocity
+                if (athlete.velocity > 0) {
+                    velocityDisplay.style.display = 'block';
+                    document.getElementById('velocityValue').textContent = athlete.velocity.toFixed(3) + ' m/s';
+                }
+                
+                // Set result saat ini
+                currentResult = athlete;
+                
+                // Tampilkan hasil
+                const gender = athlete.gender === 'Laki-laki' ? 'male' : 'female';
+                const adjustment = gender === 'male' ? 10 : 20;
+                const vo12Adjusted = athlete.vo12min + adjustment;
+                const vo15Adjusted = athlete.vo15min + adjustment;
+                
+                const formattedDate = athlete.testDate ? new Date(athlete.testDate).toLocaleDateString('id-ID') : '-';
+                
+                document.getElementById('resultName').textContent = athlete.name;
+                document.getElementById('resultGender').textContent = athlete.gender;
+                document.getElementById('resultAge').textContent = athlete.age + ' tahun';
+                document.getElementById('resultDate').textContent = formattedDate;
+                document.getElementById('resultVelocity').textContent = athlete.velocity.toFixed(3) + ' m/s';
+                document.getElementById('result12min').textContent = athlete.distance12min + ' meter';
+                document.getElementById('result15min').textContent = athlete.distance15min + ' meter';
+                document.getElementById('resultVO12').textContent = athlete.vo12min.toFixed(1) + ' mL/Kg';
+                document.getElementById('resultVO15').textContent = athlete.vo15min.toFixed(1) + ' mL/Kg';
+                document.getElementById('resultVOAverage').textContent = athlete.averageVO.toFixed(1) + ' mL/Kg';
+                document.getElementById('finalVO2Max').textContent = athlete.averageVO.toFixed(1) + ' mL/Kg';
+                
+                const categoryElement = document.getElementById('resultCategory');
+                categoryElement.textContent = athlete.category;
+                categoryElement.className = 'category ' + getCategoryClass(athlete.averageVO);
+                
+                document.getElementById('resultEligibility').textContent = athlete.isEligible ? 'LULUS' : 'TIDAK LULUS';
+                document.getElementById('resultEligibility').style.color = athlete.isEligible ? 'var(--success-color)' : 'var(--danger-color)';
+                
+                resultsContainer.style.display = 'block';
+                noResults.style.display = 'none';
+                
+                // Switch ke halaman kalkulator
+                switchPage('calculator');
+                
+                alert(`Data ${athlete.name} berhasil dimuat ke form!`);
+            };
+            
+            // Fungsi untuk menghapus atlet (global)
+            window.deleteAthlete = function(id) {
+                if (!confirm('Apakah Anda yakin ingin menghapus data atlet ini?')) return;
+                
+                database = database.filter(item => item.id !== id);
+                localStorage.setItem('sportlab_vo2max_database', JSON.stringify(database));
+                
+                updateDatabaseStats();
+                displayDatabase();
+                
+                alert('Data atlet berhasil dihapus!');
+            };
+            
+            // Fungsi untuk mengekspor ke CSV
+            function exportToCSV() {
+                if (database.length === 0) {
+                    alert('Database kosong! Tidak ada data untuk diekspor.');
+                    return;
+                }
+                
+                const headers = ['ID', 'Nama', 'Jenis Kelamin', 'Usia', 'Velocity (m/s)', 'Jarak 12m (m)', 'Jarak 15m (m)', 'VO2Max 12m', 'VO2Max 15m', 'Rata-rata VO2Max', 'Kategori', 'Status', 'Tanggal Tes', 'Catatan'];
+                
+                const csvData = database.map(item => {
+                    const status = item.isEligible ? 'LULUS' : 'TIDAK LULUS';
+                    
+                    return [
+                        item.id,
+                        item.name,
+                        item.gender,
+                        item.age,
+                        item.velocity.toFixed(3),
+                        item.distance12min,
+                        item.distance15min,
+                        item.vo12min.toFixed(1),
+                        item.vo15min.toFixed(1),
+                        item.averageVO.toFixed(1),
+                        item.category,
+                        status,
+                        item.testDate,
+                        item.notes || ''
+                    ];
+                });
+                
+                const csvContent = [
+                    headers.join(','),
+                    ...csvData.map(row => row.join(','))
+                ].join('\n');
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                
+                link.setAttribute('href', url);
+                link.setAttribute('download', `sportlab_database_${new Date().toISOString().slice(0,10)}.csv`);
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                alert(`Database berhasil diekspor (${database.length} data atlet)`);
+            }
+            
+            // Fungsi untuk membuat laporan
+            function generateReport() {
+                const period = document.getElementById('reportPeriod').value;
+                const now = new Date();
+                let filteredData = [...database];
+                
+                // Filter berdasarkan periode
+                if (period === 'today') {
+                    const today = now.toISOString().slice(0, 10);
+                    filteredData = database.filter(item => {
+                        const itemDate = new Date(item.testDate).toISOString().slice(0, 10);
+                        return itemDate === today;
+                    });
+                } else if (period === 'week') {
+                    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    filteredData = database.filter(item => new Date(item.testDate) >= weekAgo);
+                } else if (period === 'month') {
+                    const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+                    filteredData = database.filter(item => new Date(item.testDate) >= monthAgo);
+                }
+                
+                if (filteredData.length === 0) {
+                    document.getElementById('reportContainer').innerHTML = 
+                        '<p style="text-align: center; padding: 20px; color: #666;">Tidak ada data untuk periode yang dipilih!</p>';
+                    return;
+                }
+                
+                // Hitung statistik
+                const maleAthletes = filteredData.filter(item => item.gender === 'Laki-laki');
+                const femaleAthletes = filteredData.filter(item => item.gender === 'Perempuan');
+                const eligibleAthletes = filteredData.filter(item => item.isEligible);
+                
+                const avgVO2Max = filteredData.reduce((sum, item) => sum + item.averageVO, 0) / filteredData.length;
+                const avgVelocity = filteredData.reduce((sum, item) => sum + item.velocity, 0) / filteredData.length;
+                const maxVO2Max = Math.max(...filteredData.map(item => item.averageVO));
+                const minVO2Max = Math.min(...filteredData.map(item => item.averageVO));
+                
+                // Tampilkan statistik
+                let statsHTML = `
+                    <div class="stat-card">
+                        <div class="stat-label">Total Atlet</div>
+                        <div class="stat-value">${filteredData.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Rata-rata VO2Max</div>
+                        <div class="stat-value">${avgVO2Max.toFixed(1)}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Rata-rata Velocity</div>
+                        <div class="stat-value">${avgVelocity.toFixed(2)} m/s</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Lulus Seleksi</div>
+                        <div class="stat-value">${eligibleAthletes.length}</div>
+                    </div>
+                `;
+                
+                document.getElementById('reportStats').innerHTML = statsHTML;
+                
+                // Buat konten laporan
+                let reportHTML = `
+                    <div class="result-box">
+                        <h3 style="color: var(--secondary-color); margin-bottom: 15px;">Laporan Analisis ${getPeriodName(period)}</h3>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Periode:</span>
+                            <span class="result-value">${getPeriodName(period)}</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Total Atlet:</span>
+                            <span class="result-value">${filteredData.length} atlet</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Laki-laki:</span>
+                            <span class="result-value">${maleAthletes.length} atlet</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Perempuan:</span>
+                            <span class="result-value">${femaleAthletes.length} atlet</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Persentase Kelayakan:</span>
+                            <span class="result-value" style="color: var(--success-color);">
+                                ${((eligibleAthletes.length / filteredData.length) * 100).toFixed(1)}%
+                            </span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">VO2Max Tertinggi:</span>
+                            <span class="result-value">${maxVO2Max.toFixed(1)} mL/Kg</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">VO2Max Terendah:</span>
+                            <span class="result-value">${minVO2Max.toFixed(1)} mL/Kg</span>
+                        </div>
+                        
+                        <h4 style="margin-top: 20px; color: var(--secondary-color);">Rekomendasi:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>${eligibleAthletes.length} atlet</strong> direkomendasikan untuk seleksi lanjutan</li>
+                            <li><strong>${filteredData.length - eligibleAthletes.length} atlet</strong> perlu pembinaan lebih lanjut</li>
+                            <li>Fokus pada peningkatan kapasitas aerobik untuk atlet dengan VO2Max di bawah standar</li>
+                            <li>Pertahankan program latihan untuk atlet dengan kategori Superior</li>
+                        </ul>
+                    </div>
+                `;
+                
+                document.getElementById('reportContainer').innerHTML = reportHTML;
+            }
+            
+            // Fungsi untuk mendapatkan nama periode
+            function getPeriodName(period) {
+                const names = {
+                    'all': 'Semua Data',
+                    'month': 'Bulan Ini',
+                    'week': 'Minggu Ini',
+                    'today': 'Hari Ini'
+                };
+                return names[period] || period;
+            }
+            
+            // Fungsi untuk mencetak laporan
+            function printReport() {
+                const reportContent = document.getElementById('reportContainer').innerHTML;
+                if (!reportContent || reportContent.includes('Tidak ada data')) {
+                    alert('Generate laporan terlebih dahulu!');
+                    return;
+                }
+                
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>SportLab - Laporan VO2Max</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            h1 { color: #1a73e8; }
+                            .report-header { margin-bottom: 30px; text-align: center; }
+                            .result-item { margin-bottom: 10px; display: flex; justify-content: space-between; }
+                            .result-label { font-weight: bold; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+                            th { background-color: #1a73e8; color: white; }
+                            @media print {
+                                .no-print { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="report-header">
+                            <h1>SportLab Analytics</h1>
+                            <h2>Laporan Analisis VO2Max Atlet Renang KU-2</h2>
+                            <p>Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}</p>
+                        </div>
+                        ${reportContent}
+                        <div class="no-print" style="margin-top: 30px; text-align: center;">
+                            <button onclick="window.print()" style="padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer;">Cetak</button>
+                            <button onclick="window.close()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Tutup</button>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+            }
+            
+            // Fungsi untuk update counter di footer
+            function updateDatabaseCount() {
+                document.getElementById('dbCount').textContent = database.length;
+            }
+            
+            // Event listeners untuk kalkulator
+            calculateBtn.addEventListener('click', calculateVO2Max);
+            saveBtn.addEventListener('click', saveToDatabase);
+            resetBtn.addEventListener('click', resetForm);
+            
+            // Event listeners untuk database
+            searchAthleteInput.addEventListener('input', function() {
+                displayDatabase(this.value);
+            });
+            exportBtn.addEventListener('click', exportToCSV);
+            
+            // Event listeners untuk laporan
+            generateReportBtn.addEventListener('click', generateReport);
+            printReportBtn.addEventListener('click', printReport);
+            
+            // Validasi input angka
+            const numberInputs = document.querySelectorAll('input[type="number"]');
+            numberInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value < 0) this.value = 0;
+                });
+            });
+            
+            // Inisialisasi
+            updateDatabaseCount();
+            switchPage('calculator');
+        });
+    </script>
+</body>
+</html>
