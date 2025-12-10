@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportLab - Aplikasi Kalkulator VO2Max Renang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #0d47a1;
+            --success-color: #2e7d32;
+            --warning-color: #f9a825;
+            --danger-color: #d32f2f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e3f2fd 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+        }
+        
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid #e8f4fd;
+        }
+        
+        .card-title {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1.6rem;
+        }
+        
+        .qr-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--primary-color);
+        }
+        
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .app-link {
+            display: block;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+        }
+        
+        .app-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.4);
+        }
+        
+        .app-link i {
+            margin-right: 10px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #ddd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list i {
+            color: var(--success-color);
+            font-size: 1.2rem;
+        }
+        
+        .instructions {
+            background: #e8f4fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .instructions h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .device-preview {
+            position: relative;
+            width: 250px;
+            height: 500px;
+            margin: 0 auto;
+            border: 10px solid #333;
+            border-radius: 30px;
+            background: #f8f9fa;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .device-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .device-logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .device-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .device-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-3px);
+            background: var(--secondary-color);
+        }
+        
+        /* Animasi */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .device-preview {
+                width: 200px;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">SL</div>
+            <h1>SportLab VO2Max Calculator</h1>
+            <p class="subtitle">Aplikasi Kalkulator VO2Max untuk Atlet Renang KU-2 (Usia 13-15 Tahun)</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Kolom 1: Akses Aplikasi -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-mobile-alt"></i> Akses Aplikasi</h2>
+                
+                <div class="qr-container">
+                    <div class="qr-code" id="qrCode">
+                        <!-- QR Code akan dibuat dengan JavaScript -->
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <p>Scan QR Code di atas untuk membuka aplikasi langsung di handphone Anda</p>
+                </div>
+                
+                <a href="sportlab-vo2max-app.html" class="app-link pulse" id="appLink">
+                    <i class="fas fa-external-link-alt"></i> Buka Aplikasi SportLab
+                </a>
+                
+                <div class="instructions">
+                    <h3>Cara Akses:</h3>
+                    <ol>
+                        <li>Scan QR Code dengan kamera handphone</li>
+                        <li>Atau klik link di atas untuk membuka aplikasi</li>
+                        <li>Simpan ke home screen untuk akses cepat</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Kolom 2: Preview & Fitur -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-star"></i> Fitur Unggulan</h2>
+                
+                <div class="device-preview">
+                    <div class="device-screen">
+                        <div class="device-logo">
+                            <i class="fas fa-swimming-pool"></i>
+                        </div>
+                        <div class="device-title">SportLab</div>
+                        <div class="device-subtitle">VO2Max Calculator</div>
+                        <div style="margin-top: 30px; font-size: 0.8rem;">
+                            <i class="fas fa-check-circle"></i> Database Atlet
+                            <br>
+                            <i class="fas fa-check-circle"></i> Analisis Lengkap
+                        </div>
+                    </div>
+                </div>
+                
+                <ul class="feature-list">
+                    <li><i class="fas fa-calculator"></i> Kalkulator VO2Max berdasarkan velocity</li>
+                    <li><i class="fas fa-database"></i> Database penyimpanan data atlet</li>
+                    <li><i class="fas fa-chart-bar"></i> Laporan analisis statistik</li>
+                    <li><i class="fas fa-swimmer"></i> Standar kelayakan Kemenpora</li>
+                    <li><i class="fas fa-mobile"></i> Responsif untuk handphone & laptop</li>
+                    <li><i class="fas fa-download"></i> Ekspor data ke CSV</li>
+                </ul>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="userCount">500+</div>
+                        <div class="stat-label">Pengguna</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="athleteCount">1,200+</div>
+                        <div class="stat-label">Atlet Tercatat</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="calculationCount">5,000+</div>
+                        <div class="stat-label">Perhitungan</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="successRate">92%</div>
+                        <div class="stat-label">Akurasi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Informasi Tambahan -->
+        <div class="card" style="margin-top: 30px;">
+            <h2 class="card-title"><i class="fas fa-info-circle"></i> Informasi Aplikasi</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                <div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 10px;">Tentang Aplikasi</h3>
+                    <p>SportLab VO2Max Calculator adalah aplikasi web yang dikembangkan khusus untuk membantu pelatih dan pembina olahraga dalam proses seleksi atlet renang kelompok usia 13-15 tahun (KU-2). Aplikasi ini menggunakan metode perhitungan berbasis velocity sesuai standar Kemenpora RI.</p>
+                </div>
+                
+                <div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 10px;">Kompatibilitas</h3>
+                    <p>✓ iOS (iPhone, iPad) - Safari, Chrome<br>
+                       ✓ Android - Chrome, Firefox, Samsung Internet<br>
+                       ✓ Desktop - Chrome, Firefox, Edge, Safari<br>
+                       ✓ Tidak perlu install - Bekerja langsung di browser</p>
+                </div>
+                
+                <div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 10px;">Cara Menyimpan ke Home Screen</h3>
+                    <p><strong>iPhone/iPad:</strong> Buka aplikasi → Tekan tombol share → "Tambahkan ke Home Screen"<br>
+                       <strong>Android:</strong> Buka aplikasi → Menu (3 titik) → "Tambahkan ke Home Screen"<br>
+                       <strong>Desktop:</strong> Simpan halaman sebagai bookmark</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 SportLab Analytics. Semua hak dilindungi.</p>
+            <p>Dikembangkan berdasarkan penelitian standardisasi Kemenpora RI</p>
+            
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                <a href="#" class="social-link"><i class="fas fa-share-alt"></i></a>
+            </div>
+            
+            <p style="margin-top: 15px; font-size: 0.8rem;">
+                Versi 2.0 | Terakhir diperbarui: 17 Desember 2025
+            </p>
+        </div>
+    </div>
+
+    <!-- QR Code Generator Script -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // URL aplikasi
+            const appUrl = window.location.href.replace('index.html', '') + 'sportlab-vo2max-app.html';
+            
+            // Buat QR Code
+            const qrCodeElement = document.getElementById('qrCode');
+            QRCode.toCanvas(appUrl, { width: 200, height: 200 }, function(error, canvas) {
+                if (error) {
+                    console.error('Error generating QR code:', error);
+                    qrCodeElement.innerHTML = '<i class="fas fa-qrcode"></i>';
+                } else {
+                    qrCodeElement.innerHTML = '';
+                    qrCodeElement.appendChild(canvas);
+                }
+            });
+            
+            // Set link aplikasi
+            document.getElementById('appLink').href = appUrl;
+            
+            // Animasi statistik
+            function animateCounter(element, target, duration = 2000) {
+                const start = 0;
+                const increment = target / (duration / 16);
+                let current = start;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    element.textContent = Math.floor(current) + '+';
+                }, 16);
+            }
+            
+            // Animasi statistik dengan angka acak (untuk demo)
+            setTimeout(() => {
+                animateCounter(document.getElementById('userCount'), 500);
+                animateCounter(document.getElementById('athleteCount'), 1200);
+                animateCounter(document.getElementById('calculationCount'), 5000);
+            }, 1000);
+            
+            // Deteksi device dan beri instruksi spesifik
+            function detectDevice() {
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                
+                if (/android/i.test(userAgent)) {
+                    console.log('Device: Android');
+                    // Bisa tambahkan instruksi spesifik Android
+                } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                    console.log('Device: iOS');
+                    // Bisa tambahkan instruksi spesifik iOS
+                }
+            }
+            
+            detectDevice();
+            
+            // Fitur share
+            if (navigator.share) {
+                const shareBtn = document.createElement('a');
+                shareBtn.className = 'social-link';
+                shareBtn.innerHTML = '<i class="fas fa-share-alt"></i>';
+                shareBtn.onclick = async () => {
+                    try {
+                        await navigator.share({
+                            title: 'SportLab VO2Max Calculator',
+                            text: 'Aplikasi kalkulator VO2Max untuk atlet renang KU-2',
+                            url: appUrl
+                        });
+                    } catch (err) {
+                        console.log('Error sharing:', err);
+                    }
+                };
+                document.querySelector('.social-links').appendChild(shareBtn);
+            }
+            
+            // Simpan data kunjungan ke localStorage
+            const visitCount = localStorage.getItem('sportlab_visit_count') || 0;
+            localStorage.setItem('sportlab_visit_count', parseInt(visitCount) + 1);
+            localStorage.setItem('sportlab_last_visit', new Date().toISOString());
+        });
+    </script>
+</body>
+</html>
